@@ -14,13 +14,14 @@ void recursivePrintAVL(AVL, int, int);
 int main(){
     
     AVL sla = nullptr;
-    insert(sla,'D', 4);
-    insert(sla,'B', 2);
-    insert(sla,'F', 6);
-    insert(sla,'A', 1);
-    insert(sla,'C', 3);
-    //insert(sla,'E', 5);
-    insert(sla,'G', 7);
+    std::cout << insert(sla,'D', 4) << '\n';
+    std::cout << insert(sla,'B', 2) << '\n';
+    std::cout << insert(sla,'F', 6) << '\n';
+    std::cout << insert(sla,'A', 1) << '\n';
+    std::cout << insert(sla,'C', 3) << '\n';
+    std::cout << insert(sla,'E', 5) << '\n';
+    std::cout << insert(sla,'G', 7) << '\n';
+    std::cout << insert(sla,'G', 7) << '\n';
     //insert(sla,'G', 3);
     //insert(sla,'H', 5);
     //insert(sla,'I', 7);

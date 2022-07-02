@@ -5,6 +5,7 @@
 
 //include
 #include <stdexcept>
+#include <iostream>
 
 struct node {
     char content;
@@ -62,7 +63,7 @@ bool insert(AVL &root, char content, int key)
         //Insert
         recursiveInsert(root, newNode);
     }
-    catch(...)
+    catch(std::invalid_argument& e)
     {
         return false;
     }
@@ -81,9 +82,7 @@ bool recursiveInsert(AVL &root, AVL &newNode)
     
     // case 1: place to insert is not found
     if(root->key == newNode->key)
-        throw;
-    
-    
+        throw std::invalid_argument("Don't repeat keys");
 
     // case 2: place to insert is on left
     if(newNode->key < root->key)
