@@ -5,7 +5,6 @@
 
 //include
 #include <stdexcept>
-#include <iostream>
 
 struct node {
     char content;
@@ -31,9 +30,8 @@ AVL newAVL(char, int, AVL);
 //auxiliars
 bool recursiveInsert(AVL &, AVL &);
 // bool recursiveRemove(AVL, int, AVL);
-// void leftRotation(AVL);
-// void rightRotation(AVL);
-// void balance(AVL);
+void rotation(AVL &, int);
+void balance(AVL &);
 
 //functions
 
@@ -92,6 +90,9 @@ bool recursiveInsert(AVL &root, AVL &newNode)
             //Configuration after adding
             root->left->father = root;
             root->bal--;
+
+            if(root->bal == -1)
+                return true;
         }
     }
     // case 3: place to insert is on right
@@ -102,21 +103,23 @@ bool recursiveInsert(AVL &root, AVL &newNode)
             //Configuration after adding
             root->right->father = root;
             root->bal++;
+
+            if(root->bal == 1)
+                return true;
         }
     }
 
     // balance cases
 
     // case 0: recursiveInsert caused a height increase
-    if(abs(root->bal) == 1)
-        return true;
+    
 
     // else 
     // case 1: recursiveInsert did't cause height increase
 
     // case 2: recursiveInsert caused a height increase and unbalance AVL
-    if(abs(root->bal) > 1){}
-        //balance(root);
+    if(abs(root->bal) > 1)
+        balance(root);
 
     return false;
 }
@@ -131,4 +134,76 @@ int getHeight(AVL root)
     int rightH = getHeight(root->right);
 
     return leftH > rightH ? leftH : rightH + 1;
+}
+
+void rotation(AVL& root, int direction)
+{
+    // auxiliar variable
+    AVL newRoot;
+    
+    if(direction < 0){   
+        newRoot = root->right;
+        
+        // changing sons
+        root->right = newRoot->left;
+        newRoot->left = root;
+    }
+    else if(direction > 0){
+        newRoot = root->left;
+        
+        // changing sons
+        root->left = newRoot->right;
+        newRoot->right = root;
+    }
+    
+    // ajusting bal
+    root->bal = 0;
+    newRoot->bal = 0;  
+
+    // changing father
+    newRoot->father = root->father;
+    root->father = newRoot;
+    
+    // changing root
+    root = newRoot; 
+
+      
+}
+
+
+
+void balance(AVL &root)
+{
+    int weight, rotationCase = 0;
+
+    if(root->bal < 0 )
+    {
+        weight = root->bal + root->left->bal;
+
+        if(weight == -1)
+        {
+            rotationCase = root->left->right->bal;
+            rotation(root, -1);
+        }
+            
+        
+        rotation(root, 1);
+    }
+    else
+    {
+        weight = root->bal + root->right->bal;
+
+        if(weight == 1)
+        {
+            rotationCase = root->right->left->bal;
+            rotation(root, 1);
+        }
+        
+        rotation(root, -1); 
+    }
+
+    if(rotationCase == -1)
+        root->right->bal = 1;
+    else if(rotationCase == 1)
+        root->left->bal = -1;
 }
