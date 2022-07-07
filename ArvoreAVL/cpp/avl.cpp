@@ -23,9 +23,8 @@ typedef struct node* AVL;
 //main functions
 AVL newAVL(char, int, AVL);
 // char search(AVL, int);
-// bool insert(AVL, char, int);
+bool insert(AVL &, char, int);
 // bool remove(AVL, int);
-// void printAVL(AVL );
 
 //auxiliars
 bool recursiveInsert(AVL &, AVL &);
@@ -91,6 +90,7 @@ bool recursiveInsert(AVL &root, AVL &newNode)
             root->left->father = root;
             root->bal--;
 
+            //recursiveInsert caused a height increase
             if(root->bal == -1)
                 return true;
         }
@@ -104,20 +104,13 @@ bool recursiveInsert(AVL &root, AVL &newNode)
             root->right->father = root;
             root->bal++;
 
+            //recursiveInsert caused a height increase
             if(root->bal == 1)
                 return true;
         }
     }
 
-    // balance cases
-
-    // case 0: recursiveInsert caused a height increase
-    
-
-    // else 
-    // case 1: recursiveInsert did't cause height increase
-
-    // case 2: recursiveInsert caused a height increase and unbalance AVL
+    // recursiveInsert caused unbalance in AVL
     if(abs(root->bal) > 1)
         balance(root);
 
@@ -174,25 +167,29 @@ void rotation(AVL& root, int direction)
 
 void balance(AVL &root)
 {
+    //declaring variables
     int weight, rotationCase = 0;
 
+    //case 0: unbalanced for left _|-
     if(root->bal < 0 )
     {
         weight = root->bal + root->left->bal;
 
+        //case 0.1: child unbalanced for right
         if(weight == -1)
         {
             rotationCase = root->left->right->bal;
             rotation(root, -1);
-        }
-            
+        }   
         
         rotation(root, 1);
     }
+    //case 1: unbalanced for right -|_
     else
     {
         weight = root->bal + root->right->bal;
 
+        //case 1.1: child unbalanced for left
         if(weight == 1)
         {
             rotationCase = root->right->left->bal;
@@ -202,6 +199,7 @@ void balance(AVL &root)
         rotation(root, -1); 
     }
 
+    //ajusting bal for double rotation cases
     if(rotationCase == -1)
         root->right->bal = 1;
     else if(rotationCase == 1)
